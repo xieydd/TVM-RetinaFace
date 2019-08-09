@@ -4,7 +4,7 @@ import nnvm.compiler
 import nnvm.testing
 
 inHeight =1024
-inWeight = 1024
+inWeight = 1057 
 device_target = "llvm -mcpu=cortex-a17"
 
 def get_target():

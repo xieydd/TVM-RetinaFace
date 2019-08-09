@@ -30,7 +30,6 @@ FR_RFN_Deploy::FR_RFN_Deploy(std::string modelFolder)
 std::map<const char*, cv::Mat> FR_RFN_Deploy::forward(cv::Mat& img, float threshold, std::vector<float> & scales, bool do_flip)
 {
     std::vector<int> flips;
-    cv::Mat inputImageAligned;
     cv::Mat im;
     cv::Mat dst;
     cv::Mat tensor; 
@@ -42,12 +41,11 @@ std::map<const char*, cv::Mat> FR_RFN_Deploy::forward(cv::Mat& img, float thresh
         flips.push_back(1);
     }
 
-    scales.push_back(1.0);
     for (int i = 0; i < scales.size(); i++) {
         for (int j = 0; j < flips.size(); j++) {
             if (scales[i] != 1.0) {
 		// set CV_INTER_LINEAR to 1
-                cv::resize(img, inputImageAligned,cv::Size(0,0), scales[i], scales[i], 1);
+                cv::resize(img, im,cv::Size(0,0), scales[i], scales[i], 1);
             } else 
             {
                 im = img.clone();
@@ -60,7 +58,7 @@ std::map<const char*, cv::Mat> FR_RFN_Deploy::forward(cv::Mat& img, float thresh
             int h = im.rows;
             int w = im.cols;
             // keep rows and cols be multipe of 32, dosen`t Impact coordinates.
-            if (nocrop)
+            if(nocrop)
             {
                 if (im.rows % 32 == 0) { h = im.rows;}
                 else {h = (im.rows / 32 + 1)*32;}

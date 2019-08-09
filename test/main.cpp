@@ -1,10 +1,10 @@
 #include <opencv2/opencv.hpp>
 #include "retinaface.h"
-#include "time"
+#include "time.h"
 
 int main(int argc, char *argv[])
 {
-    if argc != 3 {
+    if(argc != 3) {
         fprintf(stderr, "args is not enough, we need 2 args: modelpath dir, imagepath");
         return -1;
     }
@@ -18,18 +18,19 @@ int main(int argc, char *argv[])
     long long start_time, end_time;
     bool do_flip = false;
 
-    cv::Mat img = cv::imread(imagepath);
-    if img.is_empty() 
+    cv::Mat img = cv::imread(imagepath, CV_LOAD_IMAGE_COLOR);
+    printf("Image size is rows: %d, cols: %d, dims: %d, channels: %d.\n", img.rows, img.cols, img.dims, img.channels());
+    if(img.empty()){ 
         fprintf(stderr, "cv::imread %s failed\n", imagepath);
         return -1;
     }
     //cv::Mat img2 = cv::imread("./face1.jpg");
     FR_RFN_Deploy deploy(modelpath);
 
-    im_size_min = min(img.rows, img.cols);
-    im_size_max = max(img.rows, img.cols);
-    im_scale = float(inWidth) / float(im_size_min);
-    if round(im_scale * im_size_max) > maxSize {
+    int im_size_min = cv::min(img.rows, img.cols);
+    int im_size_max = cv::max(img.rows, img.cols);
+    float im_scale = float(inWidth) / float(im_size_min);
+    if(round(im_scale * im_size_max) > maxSize) {
         im_scale = float(maxSize) / float(im_size_max);
     }
     
